@@ -1,0 +1,14 @@
+[
+  {
+    "symbol": {"code": "AAPL"},
+    "price": 150.0,
+    "volume": 100,
+    "timestamp": "2024-01-01T00:00:00Z"
+  },
+  {
+    "symbol": {"code": "AAPL"},
+    "price": 150.5,
+    "volume": 200,
+    "timestamp": "2024-01-01T00:01:00Z"
+  }
+]

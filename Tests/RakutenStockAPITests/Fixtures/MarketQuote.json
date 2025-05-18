@@ -1,0 +1,7 @@
+{
+  "symbol": {"code": "AAPL", "name": "Apple"},
+  "lastPrice": 150.0,
+  "bid": 149.5,
+  "ask": 150.5,
+  "timestamp": "2024-01-01T00:00:00Z"
+}

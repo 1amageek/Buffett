@@ -22,6 +22,13 @@ let package = Package(
         .testTarget(
             name: "BuffettTests",
             dependencies: ["Buffett"]
+        ),
+        .testTarget(
+            name: "RakutenStockAPITests",
+            dependencies: ["Buffett"],
+            resources: [
+                .copy("Fixtures")
+            ]
         )
     ]
 )

@@ -1,0 +1,11 @@
+[
+  {
+    "symbol": {"code": "AAPL"},
+    "timestamp": "2024-01-01T00:00:00Z",
+    "open": 149.0,
+    "high": 151.0,
+    "low": 148.5,
+    "close": 150.0,
+    "volume": 1000
+  }
+]
