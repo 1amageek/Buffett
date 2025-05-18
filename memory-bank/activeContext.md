@@ -1,57 +1,38 @@
-# activeContext.md
+# Active Context for Buffett Application
 
 ## Current Work Focus
 
-- Enhancing real-time data integration with kabu Station API
-- Improving technical indicator calculations and accuracy
-- Refining Swift Charts visualizations for better user experience
-- Modularizing codebase for easier maintenance and scalability
+* Implementing the Buffett macOS native application for real-time stock price analysis.
+* Integration with Rakuten Securities MarketSpeed II API (RSS) for live data.
+* Developing modular architecture separating API logic (RakutenStockAPI) and UI (BuffettApp).
+* Building core features including multi-stock charting, technical indicators, and multi-window support.
+* Establishing testing frameworks for API, ViewModel, and UI components.
 
 ## Recent Changes
 
-- Updated API client to latest OpenAPI specification
-- Refactored ViewModels to use Combine for reactive updates
-- Improved error handling for API communication failures
+* Defined detailed project specifications and milestones.
+* Established system architecture and design patterns (MVVM, reactive data flow).
+* Set up technical context including development environment and dependencies.
+* Created initial data models and API wrappers for Market, TickList, and Chart data.
+* Started implementation of charting components using Swift Charts.
 
 ## Next Steps
 
-- Implement additional technical indicators requested by users
-- Optimize data fetching to reduce latency and CPU usage
-- Add unit and integration tests for new features
-- Enhance UI responsiveness and accessibility
+* Complete API wrappers for all required RSS endpoints.
+* Implement ViewModels for data binding and transformation.
+* Develop UI components for stock lists, categories, and multi-window chart views.
+* Integrate technical indicator calculations and overlay support.
+* Add annotation and canvas features for user analysis.
+* Write unit and UI tests to ensure reliability and correctness.
+* Optimize performance for handling up to 500 stocks with real-time updates.
 
 ## Active Decisions and Considerations
 
-- Choosing between local caching strategies for market data
-- Balancing real-time updates with battery and resource consumption
-- Planning for multi-platform support (iOS and macOS)
-- Evaluating potential integration with other financial data sources
-## Current Work Focus
+* Use Swift’s async/await and Combine for asynchronous data handling.
+* Polling strategy for data fetching with throttling to balance performance and freshness.
+* Modular SPM package structure to separate concerns and enable testing.
+* UI design to leverage macOS WindowGroup for independent stock windows.
+* Client-side calculation of technical indicators for flexibility and responsiveness.
+* Annotation tools integrated directly into chart views for seamless user experience.
 
-* Establishing robust integration with SBI Securities' kabu Station API using Swift OpenAPI Generator
-* Developing modular Swift Package (SBIStockAPI) for clean separation of API logic from UI components
-
-## Recent Changes
-
-* Decided to utilize Swift OpenAPI Generator for maintaining strongly typed and easily maintainable API client code
-
-## Next Steps
-
-* Implement and validate data retrieval from kabu Station API
-* Begin development of technical indicators computation logic
-* Design initial Swift Charts-based visualization
-
-* Propose and implement detailed flow for integration and visualization
-## Active Decisions and Considerations
-
-* Using MVVM architecture for clear separation between data models, view models, and views
-* Keeping API logic separate to ensure modularity and reusability
-
-## Important Patterns and Preferences
-
-* Prioritize clarity and performance in data visualization
-* Ensure robust error handling and user-friendly messaging for API interactions
-
-## Learnings and Project Insights
-
-* Swift OpenAPI Generator significantly simplifies API client maintenance and reduces errors through strongly typed interfaces
+This active context reflects the current development priorities and guides ongoing work on Buffett.

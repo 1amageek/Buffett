@@ -1,50 +1,35 @@
-# progress.md
+# Progress for Buffett Application
 
 ## What Works
 
-- Real-time data fetching from kabu Station API is functional
-- Basic technical indicators calculation implemented
-- Swift Charts visualizations display data correctly
-- Modular architecture with Swift Package Manager setup
+* Core project specifications and architecture defined.
+* Initial data models and API wrappers for key RSS endpoints (Market, TickList, Chart) created.
+* Basic charting components implemented using Swift Charts.
+* Modular project structure with separation of API and UI logic established.
+* Unit testing framework set up and initial tests written.
+* Reactive data flow using Combine and async/await integrated.
 
-## What's Left to Build
+## What’s Left to Build
 
-- Additional technical indicators and analysis tools
-- Enhanced error handling and recovery mechanisms
-- UI improvements for better user experience and accessibility
-- Comprehensive unit and integration tests
-
-## Current Status
-
-- Stable alpha version with core features implemented
-- Ongoing development focused on feature completeness and robustness
-
-## Known Issues
-
-- Occasional latency in data updates under heavy load
-- Limited support for multi-platform deployment
-- Need for improved caching strategies to optimize performance
-## What Works
-
-* Initial setup of Swift Package Manager (SPM) structure and integration of Swift OpenAPI Generator
-* Basic Swift Package definition for SBIStockAPI integration
-
-## What's Left to Build
-
-* API integration logic using the generated Swift OpenAPI client
-* Calculation logic for technical indicators
-* Visualization logic using Swift Charts
-* Comprehensive error handling and UI feedback mechanisms
+* Complete API wrappers for all remaining RSS endpoints.
+* Full implementation of ViewModels for data binding and business logic.
+* UI components for stock lists, categories, and multi-window chart views.
+* Technical indicator calculation modules and integration with charts.
+* Annotation and canvas features for user analysis.
+* Performance optimization for handling large numbers of stocks and indicators.
+* Comprehensive unit and UI testing coverage.
+* Error handling and retry mechanisms for API communication.
 
 ## Current Status
 
-* Project structure and core dependencies established
-* Ready to start active API integration and technical computation implementation
+* Early development phase with foundational components in place.
+* Active focus on API integration and charting features.
+* Testing and performance considerations ongoing.
 
 ## Known Issues
 
-* None currently identified
+* Polling strategy and data throttling need refinement for scalability.
+* UI responsiveness under heavy data load requires optimization.
+* Annotation feature design and implementation pending.
 
-## Evolution of Project Decisions
-
-* Transitioned to using Swift OpenAPI Generator for clarity, maintainability, and robustness in API integration
+This progress document tracks the current state and remaining work for Buffett.

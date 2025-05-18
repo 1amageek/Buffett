@@ -1,39 +1,157 @@
-# Project Brief
+# Buffettアプリケーション仕様書
 
-## Purpose
-This document serves as the foundation for the memory bank. It defines the core requirements and goals of the project.
+## プロジェクト概要
 
-## Project Overview
-The Buffett project aims to provide a comprehensive solution for stock market data analysis and trading automation. It focuses on delivering accurate data, efficient processing, and actionable insights to support investment decisions.
+macOSのネイティブアプリケーションで、個人投資家がリアルタイムの株価分析を行い、高度なチャート表示、テクニカル分析、銘柄管理を行えるようにする。将来的には高機能な分析とユーザーインターフェースを備えた株式分析プラットフォームとして進化させる。
 
-## Core Requirements
-- Clear and concise documentation of project goals.
-- Structured hierarchy linking to other memory bank files.
-- Maintainable and extensible format for ongoing updates.
+## 開発環境
 
-## Goals
-- Provide a single source of truth for project scope.
-- Facilitate effective communication among team members.
-- Support iterative development and continuous improvement.
+* **対象OS**: macOS 14以上
+* **使用言語**: Swift 6.1以上
+* **開発環境**: Xcode 16以上
 
-## Notes
-- This file is the starting point for all other memory bank documents.
-- It should be reviewed and updated regularly as the project evolves.
-## Project Overview
-- Define the main objectives and scope of the project.
-- Establish the key deliverables and success criteria.
-- Outline the target users and stakeholders.
+## 使用技術・ライブラリ
 
-## Core Requirements
-- Clear and concise documentation of project goals.
-- Structured hierarchy linking to other memory bank files.
-- Maintainable and extensible format for ongoing updates.
+* SwiftUI
+* Swift Charts
+* Swift OpenAPI Generator（将来的なAPI仕様の整備用）
+* Swift Package Manager（SPM）
+* Swift Testing
+* **楽天証券 マーケットスピードII API（RSS）**
 
-## Goals
-- Provide a single source of truth for project scope.
-- Facilitate effective communication among team members.
-- Support iterative development and continuous improvement.
+## 機能要件
 
-## Notes
-- This file is the starting point for all other memory bank documents.
-- It should be reviewed and updated regularly as the project evolves.
+### 株価データ管理
+
+* リアルタイム株価データ取得（現在値、気配、歩み値）
+* 銘柄ごとにカテゴリ分類可能
+* 複数銘柄の同時チャート表示（最大500銘柄まで）
+
+### テクニカル分析機能
+
+以下の指標をリアルタイムに計算・表示：
+
+* 単純移動平均線 (SMA)
+* 指数平滑移動平均線 (EMA)
+* MACD（Moving Average Convergence Divergence）
+* RSI（Relative Strength Index）
+* ボリンジャーバンド（Bollinger Bands）
+* 一目均衡表（Ichimoku Cloud）
+* 出来高加重平均価格 (VWAP)
+
+### チャート表示
+
+* Swift Chartsによるインタラクティブなチャート描画
+* マルチチャート表示に対応（1画面で複数銘柄を並列表示可能）
+* 銘柄ごとに個別ウィンドウを開いて表示可能（macOSの `WindowGroup` 機能を利用）
+* 各ウィンドウは独立した状態管理・インタラクションを持つ
+* メイン画面（カテゴリ/銘柄一覧）から個別ウィンドウを任意の銘柄で起動できるUIを提供
+
+### コメント・キャンバス機能
+
+* チャート上へのコメント追加
+* ユーザー分析内容の視覚的保存（キャンバス）
+
+## アーキテクチャ
+
+* MVVM（Model-View-ViewModel）構成
+* テスト可能な設計とSwift Testingの導入
+* APIロジックとUIロジックの分離（SPMモジュール分割）
+
+## システム構成
+
+### モジュール分割
+
+* **APIモジュール**（RakutenStockAPI）:
+
+  * 楽天RSSを通じたリアルタイムデータ取得
+  * 提供API：
+
+    * `RssMarket`: 現在値、気配値、VWAP、四本値など
+    * `RssTickList`: 歩み値（ティックデータ）
+    * `RssChart`, `RssChartPast`: OHLCVチャートデータ（日足・分足等）
+    * `RssTrendSMA`: 単純移動平均の算出
+    * `RssMarginInfo`: 信用取引関連情報（買残、売残、信用倍率）
+    * `RssRanking`: 値上がり率や出来高などのランキングデータ
+    * `RssIssueInfo`: 銘柄基本情報
+    * `RssHoldStock`, `RssAccountInfo`: 保有株、口座状況（参考）
+
+* **UIモジュール**（BuffettApp）:
+
+  * SwiftUIとChartsによる表示・操作インターフェース
+
+## マイルストーン
+
+### マイルストーン1: API基盤の実装
+
+* 楽天証券RSS APIのうち `RssMarket`, `RssTickList`, `RssChart` の取得関数をSwiftから利用可能にする
+* RakutenStockAPI モジュール内にデータモデル（`MarketQuote`, `TickData`, `OHLCVData`）を定義
+* API呼び出しロジックをモジュールに統合し、各関数のSwiftラッパーを実装
+* 銘柄・カテゴリ管理構造の初期設計（例: `Symbol`, `SymbolGroup`）
+* Swift Testing を用いた単体テストの整備と動作確認SPM構成とモジュール設計（RakutenStockAPI / Buffett）
+* 楽天証券RSS連携確認、基本データ取得の実装
+
+### マイルストーン2: チャート描画
+
+* Swift Chartsを用いた株価ラインチャートの表示機能を実装
+* 取得した `MarketQuote`, `OHLCVData` を `Chart` コンポーネントにバインド
+* チャート描画用 ViewModel（例: `ChartViewModel`）を定義し、データ構造とUIの接続を担当
+* `SymbolView` や `MultiChartView` により複数銘柄の同時表示に対応
+* 銘柄カテゴリ別の表示切替 UI（タブ/リスト等）を実装し、ユーザーがカテゴリを選択可能にする
+* `ChartView` に拡大・縮小・期間切替などの基本的インタラクションを導入
+* Swift Testing による ViewModel の単体テスト（データ変換・バインディング検証）
+
+### マイルストーン3: テクニカル指標
+
+* `OHLCVData` をもとにテクニカル指標の計算基盤を整備
+
+  * 指標ごとに専用のロジックコンポーネントを作成（例: `SMAIndicator`, `MACDIndicator`）
+  * ロジックは純粋関数または独立構造体として定義し、テスト容易性と再利用性を確保
+* 対応する指標の一覧：
+
+  * SMA（単純移動平均）
+  * EMA（指数移動平均）
+  * MACD（移動平均収束拡散法）
+  * RSI（相対力指数）
+  * Bollinger Bands（ボリンジャーバンド）
+  * Ichimoku Cloud（一目均衡表）
+  * VWAP（出来高加重平均価格）
+* 計算ロジックの Swift Testing によるユニットテスト実装
+
+  * 各指標の妥当性をテスト（計算値の比較や境界値処理）
+* チャートとの統合：
+
+  * 指標データを `ChartViewModel` に統合
+  * 表示切り替え UI（オン/オフ切り替えスイッチ、凡例表示等）を設計
+  * 各指標を重ね描画できるように `Chart` コンポーネントに複数系列を追加
+* パフォーマンス検証と最適化：
+
+  * 銘柄数・指標数が多い場合の描画負荷を評価
+  * 必要に応じてキャッシュまたはバックグラウンド更新を導入
+
+### マイルストーン4: コメント・キャンバス
+
+* チャートアノテーション機能
+* 分析ノートやスクラップ的キャンバス機能実装
+
+## 非機能要件
+
+* パフォーマンス最適化（最大500銘柄のリアルタイム更新）
+* UI応答性の確保（非同期処理の適切な管理）
+* エラー処理・データ整合性の確保
+
+## 制約事項
+
+* 楽天証券の証券口座とマーケットスピードII（Windowsアプリ）のログインが必要
+* APIはマーケットスピードII起動中に限り有効
+* 利用は個人投資目的に限定、条件付きで無料（預かり資産等）
+* テクニカル指標（MACD、RSI等）はクライアント側で独自に算出する必要あり
+* PUSH型ではなく、すべてPULLベースでのデータ取得（ポーリング設計が必要）
+
+## 成功基準
+
+* 株価・信用情報のリアルタイム取得と正確な表示
+* 高機能かつ直感的なチャート・分析UI
+* 拡張可能な設計と保守性の高いコードベース
+
+この仕様に基づき、Swiftネイティブアプリとしての堅牢な株式分析ツールを段階的に構築していきます。

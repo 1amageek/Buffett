@@ -1,61 +1,54 @@
-# techContext.md
+# Technical Context for Buffett Application
 
 ## Technologies Used
 
-- Swift programming language for iOS/macOS development
-- SwiftUI for declarative UI design
-- Combine framework for reactive programming
-- Swift Package Manager (SPM) for dependency management
-- Swift OpenAPI Generator for API client code generation
-- Swift Charts for data visualization
+* Swift 6.1+ for native macOS application development.
+* SwiftUI for declarative UI construction.
+* Swift Charts for advanced charting and visualization.
+* Swift Package Manager (SPM) for dependency management and modularization.
+* Combine framework and async/await for reactive and asynchronous programming.
+* Swift Testing framework for unit and UI testing.
+* Rakuten Securities MarketSpeed II API (RSS) for real-time stock data.
 
-## Development Setup
+## Development Environment
 
-- Xcode IDE for development and debugging
-- Localhost communication with kabu Station API for real-time data
-- Unit testing with XCTest framework
+* macOS 14 or later.
+* Xcode 16 or later.
+* Swift toolchain compatible with Swift 6.1+.
+* Local development and testing on macOS machines.
 
-## Technical Constraints
+## Dependencies and Libraries
 
-- Real-time data processing requirements
-- Efficient memory and CPU usage for mobile devices
-- Secure handling of API keys and user data
+* Swift Charts: Provides native charting components optimized for performance and integration with SwiftUI.
+* Swift OpenAPI Generator (planned): For generating API client code from OpenAPI specifications.
+* Combine: For reactive data streams and state management.
+* Swift Testing: For writing and running unit and UI tests.
 
-## Dependencies
+## Build and Packaging
 
-- SBIStockAPI package generated via OpenAPI Generator
-- Swift Charts framework for visualization
-- Combine framework for reactive data flow
-## Technologies Used
+* Use Swift Package Manager to manage modules and dependencies.
+* Separate modules for API logic (RakutenStockAPI) and UI (BuffettApp).
+* Continuous integration setup recommended for automated testing and builds.
 
-* Swift 6.1+
-* SwiftUI
-* Swift Charts
-* Xcode 16+
-* Swift Package Manager (SPM)
-* Swift OpenAPI Generator (v3.1)
-* Combine framework
+## Constraints and Considerations
 
-## Development Setup
+* API access requires MarketSpeed II Windows application running and logged in.
+* Data fetching is pull-based (polling), requiring efficient scheduling and throttling.
+* Performance optimization critical for handling up to 500 stocks with multiple indicators.
+* UI responsiveness must be maintained with asynchronous data handling and background processing.
 
-* macOS 14 or later
-* iOS 17 or later
-* kabu Station API local client running on Windows environment
+## Testing Strategy
 
-## Technical Constraints
+* Unit tests for API wrappers and data models.
+* Unit tests for ViewModels and business logic.
+* UI tests for key user interactions and chart rendering.
+* Performance tests to ensure scalability and responsiveness.
 
-* kabu Station API requires local Windows client application running
-* API rate limits (approximately 10 requests per second for data retrieval)
-* Maximum of 50 registered symbols for real-time data subscription
+## Future Technical Plans
 
-## Dependencies
+* Integration of Swift OpenAPI Generator for API client code generation.
+* Expansion of testing coverage and automation.
+* Potential use of caching layers or local databases for historical data.
+* Exploration of advanced concurrency patterns for performance.
 
-* Swift OpenAPI Generator
-* OpenAPIRuntime
-* OpenAPIURLSession
-
-## Tool Usage Patterns
-
-* Automated API client generation via OpenAPI specification
-* Reactive programming patterns using Combine for responsive UI
-* Modular development approach using Swift Package Manager for scalability
+This technical context provides the foundation for development and maintenance of the Buffett application.

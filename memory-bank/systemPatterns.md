@@ -1,28 +1,60 @@
-# systemPatterns.md
+# System Patterns for Buffett Application
 
-## System Architecture
+## Architecture Pattern
 
-- Modular architecture separating API logic (SBIStockAPI package) from UI
-- Swift Package Manager (SPM) used for dependency management and modularization
-- MVVM (Model-View-ViewModel) design pattern for clear separation of concerns
+* MVVM (Model-View-ViewModel) is the core architectural pattern.
+  - Model: Data models representing stock data, technical indicators, and user annotations.
+  - View: SwiftUI views rendering charts, lists, and UI controls.
+  - ViewModel: Manages data transformation, business logic, and state binding between Model and View.
 
-## Key Technical Decisions
+## Module Structure
 
-- Swift OpenAPI Generator (v3.1) for strongly-typed and maintainable API client code generation
-- Localhost communication with kabu Station API for real-time market data
+* Modular separation between API logic and UI logic.
+  - API Module (RakutenStockAPI): Handles all communication with Rakuten Securities MarketSpeed II API, data fetching, and parsing.
+  - UI Module (BuffettApp): Contains SwiftUI views, ViewModels, and user interaction logic.
+
+## Data Flow
+
+* Unidirectional data flow from API to UI.
+  - API Module fetches and updates data models.
+  - ViewModels observe data models and update Views reactively.
+  - User interactions in Views trigger ViewModel actions, which may request API updates or local state changes.
+
+## State Management
+
+* Each stock window manages its own independent state.
+* Shared state for stock categories and symbol lists managed at the main app level.
+* Use of Swift’s Combine framework or async/await for reactive and asynchronous data updates.
+
+## Testing Patterns
+
+* Unit tests for API data models and API call wrappers.
+* Unit tests for ViewModels focusing on data transformation and binding correctness.
+* UI tests for critical user flows and chart interactions.
+
+## Performance Optimization
+
+* Efficient data polling with throttling to handle up to 500 stocks.
+* Caching of computed technical indicators to avoid redundant calculations.
+* Background processing for heavy computations to keep UI responsive.
+
+## Error Handling
+
+* Graceful handling of API errors and network issues.
+* User notifications for critical failures.
+* Retry mechanisms with exponential backoff for data fetching.
+
+## UI Patterns
+
+* Use of SwiftUI’s `WindowGroup` for multi-window support.
+* Dynamic chart components supporting multiple overlays.
+* Toggle switches and legends for technical indicator visibility.
+* Annotation tools integrated into chart views.
 
 ## Design Patterns
 
-- Repository pattern for data management
-- ObservableObject and Combine framework for reactive UI updates
+* Use of pure functions and structs for technical indicator calculations.
+* Dependency injection for API clients to facilitate testing.
+* Observer pattern via Combine for reactive UI updates.
 
-## Component Relationships
-
-- SBIStockAPI as a standalone package, consumed by Buffett's main application
-- ViewModels responsible for business logic and communication between views and data layers
-
-## Critical Implementation Paths
-
-- API data fetching and processing
-- Technical indicators calculation logic
-- Efficient and responsive UI rendering via SwiftUI and Swift Charts
+This document captures the key system design and architectural patterns guiding Buffett’s development.
