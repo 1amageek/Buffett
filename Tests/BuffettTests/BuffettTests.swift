@@ -1,5 +1,6 @@
 import Testing
 @testable import Buffett
+@testable import RakutenStockAPI
 
 @Test
 func testMockAPI() async throws {
