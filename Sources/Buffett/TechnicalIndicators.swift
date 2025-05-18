@@ -1,4 +1,5 @@
 import Foundation
+import RakutenStockAPI
 
 /// Utility to calculate technical indicators.
 public enum TechnicalIndicators {
