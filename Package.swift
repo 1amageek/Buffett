@@ -12,6 +12,9 @@ let package = Package(
             name: "Buffett",
             targets: ["Buffett"]),
         .library(
+            name: "BuffettUI",
+            targets: ["BuffettUI"]),
+        .library(
             name: "RakutenStockAPI",
             targets: ["RakutenStockAPI"]),
     ],
@@ -25,6 +28,10 @@ let package = Package(
         .target(
             name: "Buffett",
             dependencies: ["RakutenStockAPI"]
+        ),
+        .target(
+            name: "BuffettUI",
+            dependencies: ["Buffett", "RakutenStockAPI"]
         ),
         .testTarget(
             name: "BuffettTests",
