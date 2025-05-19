@@ -35,7 +35,7 @@ let package = Package(
         ),
         .testTarget(
             name: "BuffettTests",
-            dependencies: ["Buffett", "RakutenStockAPI"]
+            dependencies: ["Buffett", "RakutenStockAPI", "BuffettUI"]
         )
     ]
 )

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents a stock symbol.
-public struct Symbol: Hashable, Codable {
+public struct Symbol: Hashable, Codable, Sendable {
     public var code: String
     public var name: String?
 
@@ -12,7 +12,7 @@ public struct Symbol: Hashable, Codable {
 }
 
 /// Real-time market quote for a symbol.
-public struct MarketQuote: Codable, Equatable {
+public struct MarketQuote: Codable, Equatable, Sendable {
     public var symbol: Symbol
     public var lastPrice: Double
     public var bid: Double?
@@ -29,7 +29,7 @@ public struct MarketQuote: Codable, Equatable {
 }
 
 /// Individual trade tick data.
-public struct TickData: Codable, Equatable {
+public struct TickData: Codable, Equatable, Sendable {
     public var symbol: Symbol
     public var price: Double
     public var volume: Int
@@ -44,7 +44,7 @@ public struct TickData: Codable, Equatable {
 }
 
 /// OHLCV (Open, High, Low, Close, Volume) candlestick data.
-public struct OHLCVData: Codable, Equatable {
+public struct OHLCVData: Codable, Equatable, Sendable {
     public var symbol: Symbol
     public var timestamp: Date
     public var open: Double
