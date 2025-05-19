@@ -27,7 +27,7 @@
 ## Build and Packaging
 
 * Use Swift Package Manager to manage modules and dependencies.
-* Separate modules for API logic (RakutenStockAPI) and UI (BuffettApp).
+* Separate modules for API logic (RakutenStockAPI) and UI (BuffettUI).
 * Continuous integration setup recommended for automated testing and builds.
 
 ## Constraints and Considerations

@@ -11,7 +11,7 @@
 
 * Modular separation between API logic and UI logic.
   - API Module (RakutenStockAPI): Handles all communication with Rakuten Securities MarketSpeed II API, data fetching, and parsing.
-  - UI Module (BuffettApp): Contains SwiftUI views, ViewModels, and user interaction logic.
+  - UI Module (BuffettUI): Contains SwiftUI views, ViewModels, and user interaction logic.
 
 ## Data Flow
 
