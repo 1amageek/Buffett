@@ -120,9 +120,14 @@ public enum TechnicalIndicators {
     /// - Returns: Array of optional RSI values.
     public static func relativeStrengthIndex(values: [Double], period: Int = 14) -> [Double?] {
         guard period > 0 else { return [] }
+        guard values.count > period else {
+            return Array(repeating: nil, count: values.count)
+        }
+
         var results: [Double?] = Array(repeating: nil, count: values.count)
         var gains: [Double] = Array(repeating: 0, count: values.count)
         var losses: [Double] = Array(repeating: 0, count: values.count)
+
         for i in 1..<values.count {
             let diff = values[i] - values[i - 1]
             if diff >= 0 {
