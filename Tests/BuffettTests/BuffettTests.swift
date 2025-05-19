@@ -1,4 +1,5 @@
 import Testing
+import Foundation
 @testable import BuffettUI
 @testable import Buffett
 @testable import RakutenStockAPI
@@ -142,4 +143,34 @@ func testChartViewModelFetch() async {
     let data = await vm.data
     #expect(!data.isEmpty)
     #expect(data.first?.symbol == symbol)
+}
+
+@Test
+func testViewModelIndicatorsAndView() async {
+    let symbol = Symbol(code: "TST")
+    var sample: [OHLCVData] = []
+    let now = Date()
+    for i in 0..<5 {
+        sample.append(
+            OHLCVData(symbol: symbol,
+                      timestamp: now.addingTimeInterval(Double(i) * 60),
+                      open: 0, high: 0, low: 0,
+                      close: Double(i + 1), volume: 1)
+        )
+    }
+
+    let vm = await MainActor.run { ChartViewModel(symbol: symbol, api: MockStockAPI(), smaPeriod: 3, emaPeriod: 3) }
+    await MainActor.run {
+        vm.data = sample
+        vm.updateIndicators()
+    }
+    let sma = await vm.sma
+    let ema = await vm.ema
+    #expect(sma[2] == 2)
+    #expect(ema[2] == 2)
+
+#if canImport(SwiftUI)
+    let view = SymbolChartView(symbol: symbol, data: sample, sma: sma, ema: ema)
+    _ = view.body
+#endif
 }
