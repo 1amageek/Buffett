@@ -7,18 +7,48 @@ import RakutenStockAPI
 public struct SymbolChartView: View {
     public var symbol: Symbol
     public var data: [OHLCVData]
+    public var sma: [Double?]?
+    public var ema: [Double?]?
 
-    public init(symbol: Symbol, data: [OHLCVData]) {
+    public init(symbol: Symbol, data: [OHLCVData], sma: [Double?]? = nil, ema: [Double?]? = nil) {
         self.symbol = symbol
         self.data = data
+        self.sma = sma
+        self.ema = ema
     }
 
     public var body: some View {
-        Chart(data) { item in
-            LineMark(
-                x: .value("Time", item.timestamp),
-                y: .value("Close", item.close)
-            )
+        Chart {
+            ForEach(Array(data.enumerated()), id: .offset) { _, item in
+                LineMark(
+                    x: .value("Time", item.timestamp),
+                    y: .value("Close", item.close)
+                )
+            }
+
+            if let sma = sma {
+                ForEach(Array(data.indices), id: .self) { idx in
+                    if let value = sma[idx] {
+                        LineMark(
+                            x: .value("Time", data[idx].timestamp),
+                            y: .value("SMA", value)
+                        )
+                        .foregroundStyle(.blue)
+                    }
+                }
+            }
+
+            if let ema = ema {
+                ForEach(Array(data.indices), id: .self) { idx in
+                    if let value = ema[idx] {
+                        LineMark(
+                            x: .value("Time", data[idx].timestamp),
+                            y: .value("EMA", value)
+                        )
+                        .foregroundStyle(.orange)
+                    }
+                }
+            }
         }
         .chartYAxis(.hidden)
         .navigationTitle(symbol.code)

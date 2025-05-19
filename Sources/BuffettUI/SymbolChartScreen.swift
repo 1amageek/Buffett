@@ -13,7 +13,10 @@ public struct SymbolChartScreen: View {
     }
 
     public var body: some View {
-        SymbolChartView(symbol: viewModel.symbol, data: viewModel.data)
+        SymbolChartView(symbol: viewModel.symbol,
+                        data: viewModel.data,
+                        sma: viewModel.sma,
+                        ema: viewModel.ema)
             .task {
                 await viewModel.fetch()
             }
