@@ -159,18 +159,52 @@ func testViewModelIndicatorsAndView() async {
         )
     }
 
-    let vm = await MainActor.run { ChartViewModel(symbol: symbol, api: MockStockAPI(), smaPeriod: 3, emaPeriod: 3) }
+    let vm = await MainActor.run { ChartViewModel(symbol: symbol,
+                                                 api: MockStockAPI(),
+                                                 smaPeriod: 3,
+                                                 emaPeriod: 3,
+                                                 bollingerPeriod: 3) }
     await MainActor.run {
         vm.data = sample
         vm.updateIndicators()
     }
     let sma = await vm.sma
     let ema = await vm.ema
+    let upper = await vm.bollingerUpper
+    let middle = await vm.bollingerMiddle
+    let lower = await vm.bollingerLower
     #expect(sma[2] == 2)
     #expect(ema[2] == 2)
+    #expect(middle[2] == 2)
+    #expect(upper[2]! > middle[2]!)
+    #expect(lower[2]! < middle[2]!)
 
 #if canImport(SwiftUI)
-    let view = SymbolChartView(symbol: symbol, data: sample, sma: sma, ema: ema)
+    let view = SymbolChartView(symbol: symbol, data: sample, sma: sma, ema: ema,
+                               bollingerUpper: upper, bollingerMiddle: middle,
+                               bollingerLower: lower)
     _ = view.body
 #endif
+}
+
+@Test
+func testChartViewModelBollingerCalculation() async {
+    let symbol = Symbol(code: "BOLL")
+    let vm = await MainActor.run {
+        ChartViewModel(symbol: symbol,
+                       api: MockStockAPI(),
+                       smaPeriod: 3,
+                       emaPeriod: 3,
+                       bollingerPeriod: 3)
+    }
+    await MainActor.run {
+        vm.data = [
+            .init(symbol: symbol, timestamp: .init(), open: 0, high: 0, low: 0, close: 1, volume: 1),
+            .init(symbol: symbol, timestamp: .init(), open: 0, high: 0, low: 0, close: 2, volume: 1),
+            .init(symbol: symbol, timestamp: .init(), open: 0, high: 0, low: 0, close: 3, volume: 1)
+        ]
+        vm.updateIndicators()
+    }
+    let middle = await vm.bollingerMiddle
+    #expect(middle[2] == 2)
 }

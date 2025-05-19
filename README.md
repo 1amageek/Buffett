@@ -1,6 +1,6 @@
 # Buffett
 
-Buffett is a Swift Package that provides core models, technical indicator utilities and API integrations for building a macOS or iOS stock analysis application.
+Buffett is a Swift Package that provides core models, technical indicator utilities and API integrations for building a macOS or iOS stock analysis application. It includes a SwiftUI charting module capable of overlaying indicators such as SMA, EMA and Bollinger Bands.
 
 ## Project Structure
 

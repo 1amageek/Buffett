@@ -16,7 +16,10 @@ public struct SymbolChartScreen: View {
         SymbolChartView(symbol: viewModel.symbol,
                         data: viewModel.data,
                         sma: viewModel.sma,
-                        ema: viewModel.ema)
+                        ema: viewModel.ema,
+                        bollingerUpper: viewModel.bollingerUpper,
+                        bollingerMiddle: viewModel.bollingerMiddle,
+                        bollingerLower: viewModel.bollingerLower)
             .task {
                 await viewModel.fetch()
             }
