@@ -72,10 +72,13 @@ func testRSIIndicator() {
 }
 
 @Test
-func testRSIInsufficientData() {
-    let values = Array(1...10).map(Double.init)
-    let rsi = TechnicalIndicators.relativeStrengthIndex(values: values, period: 14)
-    #expect(rsi.allSatisfy { $0 == nil })
+func testRSIShortData() {
+    let values: [Double] = [1, 2, 3, 4, 5]
+    let rsi = TechnicalIndicators.relativeStrengthIndex(values: values, period: 10)
+    #expect(rsi.count == values.count)
+    for entry in rsi {
+        #expect(entry == nil)
+    }
 }
 
 @Test
