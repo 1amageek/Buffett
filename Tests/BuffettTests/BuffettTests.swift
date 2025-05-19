@@ -1,4 +1,5 @@
 import Testing
+@testable import BuffettUI
 @testable import Buffett
 @testable import RakutenStockAPI
 
@@ -107,4 +108,14 @@ func testIchimokuTenkan() {
     }
     let ichimoku = TechnicalIndicators.ichimokuCloud(for: data)
     #expect(ichimoku.0[8] == 6)
+}
+
+@Test
+func testChartViewModelFetch() async {
+    let symbol = Symbol(code: "AAPL")
+    let vm = await MainActor.run { ChartViewModel(symbol: symbol, api: MockStockAPI()) }
+    await vm.fetch()
+    let data = await vm.data
+    #expect(!data.isEmpty)
+    #expect(data.first?.symbol == symbol)
 }

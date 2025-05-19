@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents a group of related stock symbols.
-public struct SymbolGroup: Codable, Equatable {
+public struct SymbolGroup: Codable, Equatable, Sendable {
     public var name: String
     public private(set) var symbols: [Symbol]
 
