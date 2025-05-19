@@ -14,7 +14,8 @@ Buffett is a Swift Package that provides core models, technical indicator utilit
 import Buffett
 import RakutenStockAPI
 
-let api = RakutenStockAPI()
+// Base URL points to a local proxy server that bridges to MarketSpeed II RSS.
+let api = RakutenStockAPI() // or RakutenStockAPI(baseURL: URL(string: "http://localhost:18080")!)
 let symbol = Symbol(code: "7203", name: "Toyota")
 let quote = try await api.fetchMarketQuote(for: symbol)
 print(quote.lastPrice)
