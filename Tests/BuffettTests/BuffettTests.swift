@@ -72,6 +72,13 @@ func testRSIIndicator() {
 }
 
 @Test
+func testRSIInsufficientData() {
+    let values = Array(1...10).map(Double.init)
+    let rsi = TechnicalIndicators.relativeStrengthIndex(values: values, period: 14)
+    #expect(rsi.allSatisfy { $0 == nil })
+}
+
+@Test
 func testBollingerBands() {
     let values: [Double] = [1, 2, 3, 4, 5]
     let bands = TechnicalIndicators.bollingerBands(values: values, period: 3)
