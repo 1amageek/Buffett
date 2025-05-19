@@ -14,7 +14,7 @@
 * Complete API wrappers for all remaining RSS endpoints.
 * Full implementation of ViewModels for data binding and business logic.
 * UI components for stock lists, categories, and multi-window chart views.
-* Technical indicator calculation modules and integration with charts.
+* Integration of technical indicators with chart views.
 * Annotation and canvas features for user analysis.
 * Performance optimization for handling large numbers of stocks and indicators.
 * Comprehensive unit and UI testing coverage.
