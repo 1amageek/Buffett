@@ -35,7 +35,7 @@ public final class ChartViewModel {
 
     /// Recalculate indicator arrays based on current ``data``.
     public func updateIndicators() {
-        sma = TechnicalIndicators.simpleMovingAverage(for: data, period: smaPeriod)
-        ema = TechnicalIndicators.exponentialMovingAverage(for: data, period: emaPeriod)
+        sma = SMAIndicator.calculate(for: data, period: smaPeriod)
+        ema = EMAIndicator.calculate(for: data, period: emaPeriod)
     }
 }

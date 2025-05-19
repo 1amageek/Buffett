@@ -35,7 +35,7 @@ func testSymbolGroupAddRemove() {
 @Test
 func testSMAIndicator() {
     let values: [Double] = [1, 2, 3, 4, 5]
-    let sma = TechnicalIndicators.simpleMovingAverage(values: values, period: 3)
+    let sma = SMAIndicator.calculate(values: values, period: 3)
     // Expect first two elements to be nil
     #expect(sma[0] == nil)
     #expect(sma[1] == nil)
@@ -47,7 +47,7 @@ func testSMAIndicator() {
 @Test
 func testEMAIndicator() {
     let values: [Double] = [1, 2, 3, 4, 5]
-    let ema = TechnicalIndicators.exponentialMovingAverage(values: values, period: 3)
+    let ema = EMAIndicator.calculate(values: values, period: 3)
     #expect(ema[2] == 2.0)
     #expect(ema[3] == 3.0)
     #expect(ema[4] == 4.0)
@@ -56,7 +56,7 @@ func testEMAIndicator() {
 @Test
 func testMACDIndicator() {
     let values: [Double] = [1, 2, 3, 4, 5, 6, 7]
-    let result = TechnicalIndicators.movingAverageConvergenceDivergence(values: values, fastPeriod: 3, slowPeriod: 5, signalPeriod: 3)
+    let result = MACDIndicator.calculate(values: values, fastPeriod: 3, slowPeriod: 5, signalPeriod: 3)
     let macd = result.0
     let signal = result.1
     #expect(macd[6] != nil)
@@ -66,7 +66,7 @@ func testMACDIndicator() {
 @Test
 func testRSIIndicator() {
     let values = Array(1...15).map(Double.init)
-    let rsi = TechnicalIndicators.relativeStrengthIndex(values: values, period: 14)
+    let rsi = RSIIndicator.calculate(values: values, period: 14)
     let lastWrapped = rsi.last ?? nil
     let last = lastWrapped ?? 0
     #expect(last > 90)
@@ -75,14 +75,14 @@ func testRSIIndicator() {
 @Test
 func testRSIInsufficientData() {
     let values = Array(1...10).map(Double.init)
-    let rsi = TechnicalIndicators.relativeStrengthIndex(values: values, period: 14)
+    let rsi = RSIIndicator.calculate(values: values, period: 14)
     #expect(rsi.allSatisfy { $0 == nil })
 }
 
 @Test
 func testBollingerBands() {
     let values: [Double] = [1, 2, 3, 4, 5]
-    let bands = TechnicalIndicators.bollingerBands(values: values, period: 3)
+    let bands = BollingerBandsIndicator.calculate(values: values, period: 3)
     let upper = bands.0
     let middle = bands.1
     let lower = bands.2
@@ -99,7 +99,7 @@ func testVWAP() {
         .init(symbol: symbol, timestamp: .init(), open: 0, high: 0, low: 0, close: 20, volume: 100),
         .init(symbol: symbol, timestamp: .init(), open: 0, high: 0, low: 0, close: 30, volume: 200)
     ]
-    let vwap = TechnicalIndicators.volumeWeightedAveragePrice(for: data)
+    let vwap = VWAPIndicator.calculate(for: data)
     #expect(vwap[0] == 10)
     #expect(vwap[1] == 15)
     #expect(vwap[2] == 22.5)
@@ -114,7 +114,7 @@ func testIchimokuTenkan() {
         let low = Double(i + 1)
         data.append(OHLCVData(symbol: symbol, timestamp: .init(), open: 0, high: high, low: low, close: high - 1, volume: 0))
     }
-    let ichimoku = TechnicalIndicators.ichimokuCloud(for: data)
+    let ichimoku = IchimokuCloudIndicator.calculate(for: data)
     #expect(ichimoku.0[8] == 6)
 }
 
@@ -122,7 +122,7 @@ func testIchimokuTenkan() {
 func testIchimokuComponentsAll() {
     let symbol = Symbol(code: "ICH")
     let data = Array(repeating: OHLCVData(symbol: symbol, timestamp: .init(), open: 0, high: 10, low: 0, close: 7, volume: 0), count: 80)
-    let ichimoku = TechnicalIndicators.ichimokuCloud(for: data)
+    let ichimoku = IchimokuCloudIndicator.calculate(for: data)
     let tenkan = ichimoku.0
     let kijun = ichimoku.1
     let senkouA = ichimoku.2
