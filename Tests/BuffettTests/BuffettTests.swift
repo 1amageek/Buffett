@@ -118,6 +118,23 @@ func testIchimokuTenkan() {
 }
 
 @Test
+func testIchimokuComponentsAll() {
+    let symbol = Symbol(code: "ICH")
+    let data = Array(repeating: OHLCVData(symbol: symbol, timestamp: .init(), open: 0, high: 10, low: 0, close: 7, volume: 0), count: 80)
+    let ichimoku = TechnicalIndicators.ichimokuCloud(for: data)
+    let tenkan = ichimoku.0
+    let kijun = ichimoku.1
+    let senkouA = ichimoku.2
+    let senkouB = ichimoku.3
+    let chikou = ichimoku.4
+    #expect(tenkan[8] == 5)
+    #expect(kijun[25] == 5)
+    #expect(senkouA[51] == 5)
+    #expect(senkouB[77] == 5)
+    #expect(chikou[0] == 7)
+}
+
+@Test
 func testChartViewModelFetch() async {
     let symbol = Symbol(code: "AAPL")
     let vm = await MainActor.run { ChartViewModel(symbol: symbol, api: MockStockAPI()) }
