@@ -9,12 +9,23 @@ public struct SymbolChartView: View {
     public var data: [OHLCVData]
     public var sma: [Double?]?
     public var ema: [Double?]?
+    public var bollingerUpper: [Double?]?
+    public var bollingerMiddle: [Double?]?
+    public var bollingerLower: [Double?]?
 
-    public init(symbol: Symbol, data: [OHLCVData], sma: [Double?]? = nil, ema: [Double?]? = nil) {
+    public init(symbol: Symbol, data: [OHLCVData],
+                sma: [Double?]? = nil,
+                ema: [Double?]? = nil,
+                bollingerUpper: [Double?]? = nil,
+                bollingerMiddle: [Double?]? = nil,
+                bollingerLower: [Double?]? = nil) {
         self.symbol = symbol
         self.data = data
         self.sma = sma
         self.ema = ema
+        self.bollingerUpper = bollingerUpper
+        self.bollingerMiddle = bollingerMiddle
+        self.bollingerLower = bollingerLower
     }
 
     public var body: some View {
@@ -46,6 +57,34 @@ public struct SymbolChartView: View {
                             y: .value("EMA", value)
                         )
                         .foregroundStyle(.orange)
+                    }
+                }
+            }
+
+            if let upper = bollingerUpper,
+               let middle = bollingerMiddle,
+               let lower = bollingerLower {
+                ForEach(Array(data.indices), id: .self) { idx in
+                    if let u = upper[idx] {
+                        LineMark(
+                            x: .value("Time", data[idx].timestamp),
+                            y: .value("BB Upper", u)
+                        )
+                        .foregroundStyle(.green)
+                    }
+                    if let m = middle[idx] {
+                        LineMark(
+                            x: .value("Time", data[idx].timestamp),
+                            y: .value("BB Middle", m)
+                        )
+                        .foregroundStyle(.purple)
+                    }
+                    if let l = lower[idx] {
+                        LineMark(
+                            x: .value("Time", data[idx].timestamp),
+                            y: .value("BB Lower", l)
+                        )
+                        .foregroundStyle(.red)
                     }
                 }
             }
