@@ -4,7 +4,7 @@
 
 * Implementing the Buffett macOS native application for real-time stock price analysis.
 * Integration with Rakuten Securities MarketSpeed II API (RSS) for live data.
-* Developing modular architecture separating API logic (RakutenStockAPI) and UI (BuffettApp).
+* Developing modular architecture separating API logic (RakutenStockAPI) and UI (BuffettUI).
 * Building core features including multi-stock charting, technical indicators, and multi-window support.
 * Establishing testing frameworks for API, ViewModel, and UI components.
 

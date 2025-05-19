@@ -76,7 +76,7 @@ macOSのネイティブアプリケーションで、個人投資家がリアル
     * `RssIssueInfo`: 銘柄基本情報
     * `RssHoldStock`, `RssAccountInfo`: 保有株、口座状況（参考）
 
-* **UIモジュール**（BuffettApp）:
+* **UIモジュール**（BuffettUI）:
 
   * SwiftUIとChartsによる表示・操作インターフェース
 
