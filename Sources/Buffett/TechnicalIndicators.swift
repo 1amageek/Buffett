@@ -131,13 +131,16 @@ public enum TechnicalIndicators {
                 losses[i] = -diff
             }
         }
+        if values.count <= period {
+            return results
+        }
         var avgGain = gains[1...period].reduce(0, +) / Double(period)
         var avgLoss = losses[1...period].reduce(0, +) / Double(period)
-        if period < values.count {
-            let rs = avgLoss == 0 ? Double.infinity : avgGain / avgLoss
-            results[period] = 100 - 100 / (1 + rs)
+        let rs = avgLoss == 0 ? Double.infinity : avgGain / avgLoss
+        results[period] = 100 - 100 / (1 + rs)
+        if values.count == period + 1 {
+            return results
         }
-        if values.count <= period { return results }
         for i in (period + 1)..<values.count {
             avgGain = ((avgGain * Double(period - 1)) + gains[i]) / Double(period)
             avgLoss = ((avgLoss * Double(period - 1)) + losses[i]) / Double(period)

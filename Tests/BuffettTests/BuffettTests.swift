@@ -72,6 +72,16 @@ func testRSIIndicator() {
 }
 
 @Test
+func testRSIShortData() {
+    let values: [Double] = [1, 2, 3, 4, 5]
+    let rsi = TechnicalIndicators.relativeStrengthIndex(values: values, period: 10)
+    #expect(rsi.count == values.count)
+    for entry in rsi {
+        #expect(entry == nil)
+    }
+}
+
+@Test
 func testBollingerBands() {
     let values: [Double] = [1, 2, 3, 4, 5]
     let bands = TechnicalIndicators.bollingerBands(values: values, period: 3)
