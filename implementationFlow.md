@@ -3,7 +3,7 @@
 ```mermaid
 flowchart TD
     A[Start: User Launches Buffett App] --> B[Initialize ViewModels]
-    B --> C[Establish Connection to kabu Station API]
+    B --> C[Establish Connection to Rakuten Securities MarketSpeed II API (RSS)]
     C --> D[Fetch Real-Time Market Data]
     D --> E[Process and Store Data in Repository]
     E --> F[Calculate Technical Indicators]
@@ -39,7 +39,7 @@ flowchart TD
 
 1. **User Launches Buffett App**: The app starts and initializes the necessary ViewModels following the MVVM pattern.
 2. **Initialize ViewModels**: ViewModels prepare to manage data and business logic.
-3. **Establish Connection to kabu Station API**: Using the Swift OpenAPI generated client, the app connects to the local kabu Station API.
+3. **Establish Connection to Rakuten Securities MarketSpeed II API (RSS)**: Using the Swift OpenAPI generated client, the app connects to the local MarketSpeed II RSS interface.
 4. **Fetch Real-Time Market Data**: The app requests real-time stock data, respecting API rate limits and subscription constraints.
 5. **Process and Store Data in Repository**: Data is managed via the repository pattern for clean separation and reusability.
 6. **Calculate Technical Indicators**: On-device calculations of indicators like moving averages, RSI, etc.
