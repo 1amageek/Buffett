@@ -7,6 +7,7 @@
 * Basic charting components implemented using Swift Charts.
 * Modular project structure with separation of API and UI logic established.
 * Unit testing framework set up and initial tests written.
+* Indicator calculation modules and unit tests implemented.
 * Reactive data flow using Combine and async/await integrated.
 
 ## What’s Left to Build
@@ -14,7 +15,6 @@
 * Complete API wrappers for all remaining RSS endpoints.
 * Full implementation of ViewModels for data binding and business logic.
 * UI components for stock lists, categories, and multi-window chart views.
-* Integration of technical indicators with chart views.
 * Annotation and canvas features for user analysis.
 * Performance optimization for handling large numbers of stocks and indicators.
 * Comprehensive unit and UI testing coverage.
@@ -25,6 +25,10 @@
 * Early development phase with foundational components in place.
 * Active focus on API integration and charting features.
 * Testing and performance considerations ongoing.
+
+## Ongoing Work (Milestone 3)
+
+* Integration of technical indicators with chart views.
 
 ## Known Issues
 
