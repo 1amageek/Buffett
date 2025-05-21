@@ -7,6 +7,7 @@ import RakutenStockAPI
 /// Screen that loads and displays a chart for a given symbol using a ``ChartViewModel``.
 public struct SymbolChartScreen: View {
     @StateObject private var viewModel: ChartViewModel
+    @State private var chartResetID = UUID()
 
     // Custom init to allow injecting ChartViewModel, useful for previews with specific states
     public init(viewModel: ChartViewModel) {
@@ -20,12 +21,19 @@ public struct SymbolChartScreen: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            Picker("Period", selection: $viewModel.selectedPeriod) {
-                ForEach(ChartTimePeriod.allCases, id: \.self) { period in
-                    Text(period.displayName).tag(period)
+            HStack {
+                Picker("Period", selection: $viewModel.selectedPeriod) {
+                    ForEach(ChartTimePeriod.allCases, id: \.self) { period in
+                        Text(period.displayName).tag(period)
+                    }
                 }
+                .pickerStyle(.segmented)
+
+                Button("Reset Zoom") {
+                    chartResetID = UUID()
+                }
+                .padding(.leading)
             }
-            .pickerStyle(.segmented)
             .padding(.horizontal)
             .padding(.top, 5)
             .padding(.bottom, 5)
@@ -45,6 +53,7 @@ public struct SymbolChartScreen: View {
                     .padding()
             } else {
                 SymbolChartView(
+                    resetID: chartResetID, // Add this line
                     symbol: viewModel.symbol,
                     data: viewModel.data,
                     sma: viewModel.sma,
