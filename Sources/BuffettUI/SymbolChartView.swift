@@ -23,10 +23,15 @@ public struct SymbolChartView: View {
     public var ichimokuChikouSpan: [Double?]?
     public var vwap: [Double?]?
 
+    let resetID: UUID // Added for reset functionality
+
     // State for managing the visible x-axis domain for zoom/pan
     @State private var xVisibleDomain: ClosedRange<Date>? // Using Date for time-based x-axis
+    @GestureState private var magnifyBy: CGFloat = 1.0
+    @State private var lastMagnificationValue: CGFloat = 1.0
 
-    public init(symbol: Symbol, data: [OHLCVData],
+    public init(resetID: UUID, // Added for reset functionality
+                symbol: Symbol, data: [OHLCVData],
                 sma: [Double?]? = nil,
                 ema: [Double?]? = nil,
                 bollingerUpper: [Double?]? = nil,
@@ -42,6 +47,7 @@ public struct SymbolChartView: View {
                 ichimokuSenkouSpanB: [Double?]? = nil,
                 ichimokuChikouSpan: [Double?]? = nil,
                 vwap: [Double?]? = nil) {
+        self.resetID = resetID // Initialize resetID
         self.symbol = symbol
         self.data = data
         self.sma = sma
@@ -241,12 +247,101 @@ public struct SymbolChartView: View {
             chart.chartXScale(domain: xVisibleDomain!)
         }
         .chartScrollableAxes(.horizontal) // Enable horizontal panning
+        .gesture(magnificationGesture) // Ensure gesture is correctly placed
+        .onChange(of: data) { oldData, newData in
+            // Reset the visible domain when the underlying data changes
+            // (e.g., due to period selection change)
+            xVisibleDomain = nil
+            lastMagnificationValue = 1.0 // Reset zoom level on data change
+        }
+        .onChange(of: resetID) { _, _ in
+            xVisibleDomain = nil
+            lastMagnificationValue = 1.0
+        }
         .navigationTitle(symbol.code)
         // Add a gesture for pinch-to-zoom if needed, though chartXScale might provide some level of this.
         // For more control, a MagnificationGesture could update xVisibleDomain.
         // This is a basic setup; true pinch-to-zoom might require more.
 
         return chartContent
+    }
+
+    var magnificationGesture: some Gesture {
+        MagnificationGesture()
+            .updating($magnifyBy) { currentState, gestureState, _ in
+                gestureState = currentState
+            }
+            .onEnded { value in
+                // Apply the cumulative zoom
+                let newMagnification = lastMagnificationValue * value
+                updateXVisibleDomain(scale: newMagnification / lastMagnificationValue) // Pass the change in scale
+                lastMagnificationValue = newMagnification // Store for next cumulative zoom
+                // Note: lastMagnificationValue could grow very large or small.
+                // Consider clamping or resetting it under certain conditions if needed.
+                // For now, this allows continuous zooming.
+            }
+    }
+
+    private func updateXVisibleDomain(scale: CGFloat) {
+        guard !data.isEmpty else { return }
+
+        let currentDomain: ClosedRange<Date>
+        if let existingDomain = xVisibleDomain {
+            currentDomain = existingDomain
+        } else {
+            // If no domain is set, use the full data range
+            guard let firstDate = data.first?.timestamp, let lastDate = data.last?.timestamp else { return }
+            currentDomain = firstDate...lastDate
+        }
+
+        let currentDuration = currentDomain.upperBound.timeIntervalSinceReferenceDate - currentDomain.lowerBound.timeIntervalSinceReferenceDate
+        let newDuration = currentDuration / Double(scale) // Zoom in if scale > 1, zoom out if scale < 1
+
+        // For simplicity, zoom around the center of the current domain
+        let centerDateInterval = (currentDomain.lowerBound.timeIntervalSinceReferenceDate + currentDomain.upperBound.timeIntervalSinceReferenceDate) / 2.0
+        
+        var newLowerBound = Date(timeIntervalSinceReferenceDate: centerDateInterval - newDuration / 2.0)
+        var newUpperBound = Date(timeIntervalSinceReferenceDate: centerDateInterval + newDuration / 2.0)
+
+        // Ensure the new domain does not exceed the bounds of all available data
+        if let overallFirstDate = data.first?.timestamp, let overallLastDate = data.last?.timestamp {
+            if newLowerBound < overallFirstDate { newLowerBound = overallFirstDate }
+            if newUpperBound > overallLastDate { newUpperBound = overallLastDate }
+            
+            // Ensure newLowerBound is not after newUpperBound after clamping (can happen if zoom is too much)
+            if newLowerBound > newUpperBound {
+                if scale > 1 { // Zooming in too much
+                    newLowerBound = newUpperBound // Or set to a minimal sensible range around center
+                } else { // Zooming out too much (should be covered by overall bounds)
+                    // This case should ideally not be problematic if overall bounds are respected
+                }
+            }
+        }
+        
+        // Prevent an infinitely small domain or inverted domain
+        let minDuration: TimeInterval = 60 * 60 * 24 // Minimum 1 day visible, adjust as needed
+        if newUpperBound.timeIntervalSinceReferenceDate - newLowerBound.timeIntervalSinceReferenceDate < minDuration {
+            if scale > 1 { // Zooming in
+                 // Keep the old domain or adjust slightly if possible, but don't go below minDuration
+                 // For now, if we hit minDuration, don't zoom in further via this path.
+                 // Or, center the minDuration window.
+                let center = newLowerBound.addingTimeInterval((newUpperBound.timeIntervalSinceReferenceDate - newLowerBound.timeIntervalSinceReferenceDate) / 2)
+                newLowerBound = center.addingTimeInterval(-minDuration / 2)
+                newUpperBound = center.addingTimeInterval(minDuration / 2)
+                // Recalmp to overall bounds
+                if let overallFirstDate = data.first?.timestamp, let overallLastDate = data.last?.timestamp {
+                     if newLowerBound < overallFirstDate { newLowerBound = overallFirstDate }
+                     if newUpperBound > overallLastDate { newUpperBound = overallLastDate }
+                }
+                if newLowerBound >= newUpperBound { // If clamping made it invalid
+                    xVisibleDomain = currentDomain // Revert to old domain
+                    return
+                }
+            }
+            // If zooming out, minDuration check is less critical as it's expanding.
+        }
+
+        xVisibleDomain = newLowerBound...newUpperBound
     }
 }
 
@@ -299,6 +394,7 @@ extension View {
 
 
     return SymbolChartView(
+        resetID: UUID(), // Added for preview
         symbol: symbol,
         data: sampleData,
         sma: smaSample,
